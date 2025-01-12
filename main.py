@@ -33,7 +33,7 @@ for i in range(3):
     for j in range (3):
         for k in range(3):
             for l in range(3):
-                Cards.append([i,j,k,l,"Eindproject"+"\\"+"kaarten"+"\\"+color[l]+shape[k]+fill[j]+amount[i]+".gif"])
+                Cards.append([i,j,k,l,"pygame"+"\\"+"kaarten"+"\\"+color[l]+shape[k]+fill[j]+amount[i]+".gif"])
 
 #getcard() retrieves a random card that hasnt been used yet
 def getcard():
