@@ -10,9 +10,8 @@ clock=pygame.time.Clock()
 score=0
 GameOver=False
 inputdelay=0
-
-gameboard = pygame.Surface((950,550))
-gameboard.fill(pygame.Color(152, 155, 156))
+NoSetsTextTime=0
+highscore = 0
 
 #setting the standard font
 Font=pygame.font.SysFont('Arial',16)
@@ -31,13 +30,13 @@ color = {0:"green",1:"purple",2:"red"}
 
 #initializing all the cards
 Cards=[]
-def InitializeTable():
+def InitializeCards():
     for i in range(3):
         for j in range (3):
             for k in range(3):
                 for l in range(3):
                     Cards.append([i,j,k,l,"pygame"+"\\"+"kaarten"+"\\"+color[l]+shape[k]+fill[j]+amount[i]+".gif"])
-InitializeTable()
+InitializeCards()
 
 #getcard() retrieves a random card that hasnt been used yet
 def getcard():
@@ -75,9 +74,9 @@ def Set_Check(Kaart1,Kaart2,Kaart3): #function that checks for 3 given indices o
 #Getting all the sets
 All_Sets=[]
 def Get_Sets():
-    for Kaart1 in range (10):
-        for Kaart2 in range(Kaart1+1,11):
-            for Kaart3 in range(Kaart2+1,12):
+    for Kaart1 in range (len(Table_Cards)-2):
+        for Kaart2 in range(Kaart1+1,len(Table_Cards)-1):
+            for Kaart3 in range(Kaart2+1,len(Table_Cards)):
                 if Set_Check(Kaart1,Kaart2,Kaart3):
                     All_Sets.append([Kaart1,Kaart2,Kaart3])
 Get_Sets()
@@ -94,8 +93,8 @@ def Set_Try(s,a,b,c):
             Table_Cards[c]=getcard()
         else:
             Table_Cards.pop(a)
-            Table_Cards.pop(b)
-            Table_Cards.pop(c)
+            Table_Cards.pop(b-1)
+            Table_Cards.pop(c-2)
         All_Sets.clear()
         Get_Sets()
         return s+1
@@ -107,6 +106,10 @@ keysdictionary={0:pygame.K_a,1:pygame.K_b,2:pygame.K_c,3:pygame.K_d,4:pygame.K_e
 
 #Main game loop
 while True:
+    gameboard = pygame.Surface((950,550))
+    gameboard.fill(pygame.Color(152, 155, 156))
+
+
     #Checking if the program is closed or not
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
@@ -135,10 +138,10 @@ while True:
     if inputkeys[pygame.K_BACKSPACE]:
         SET_SelectorList=[]
 
-    NoSetsTextTime=0
+    
     if len(All_Sets)==0:
         if len(Cards)>0:
-            if NoSetsTextTime>0:
+            if NoSetsTextTime==0:
                 NoSetsTextTime=60
         else:
             GameOver=True
@@ -147,10 +150,24 @@ while True:
         NoSets = Font.render("No Sets Available!",False,(0,0,0))
         gameboard.blit(NoSets,(475-NoSets.get_width()//2,25-NoSets.get_height()//2))
         NoSetsTextTime-=1
-        if NoSetsTextTime==0:    
-            Table_Cards[random.randint(0,3)]=getcard()
-            Table_Cards[random.randint(4,7)]=getcard()
-            Table_Cards[random.randint(8,11)]=getcard()
+        if NoSetsTextTime==0:
+            for i in range (0,12,4):
+                a=random.randint(0+i,3+i)
+                print(a)
+                print(Table_Cards[a])
+                Table_Cards[a]=getcard()
+                print(Table_Cards[a])
+            Get_Sets()
+
+    if GameOver:
+        GameOverText = Font.render("Game Over! Press the Spacebar to play again.",False,(0,0,0))
+        gameboard.blit(GameOverText,(475-GameOverText.get_width()//2,25-GameOverText.get_height()//2))
+        if inputkeys[pygame.K_SPACE]:
+            GameOver=False
+            Table_Cards=[]
+            InitializeCards()
+            InitializeTable()
+            score=0
 
     #adding the cards to the screen
     for i in range(len(Table_Cards)):
@@ -164,6 +181,11 @@ while True:
 
     scoretext=Font.render("score="+str(score),False,(0,0,0))
     screen.blit(scoretext,(20,20))
+    if score>highscore:
+        highscore=score
+    highscoretext=Font.render("highscore="+str(highscore),False,(0,0,0))
+    screen.blit(highscoretext,(930-highscoretext.get_width(),20))
+
     
     for i in SET_SelectorList:
         temporary_surface = pygame.Surface((100,200))
