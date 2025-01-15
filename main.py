@@ -172,4 +172,4 @@ while True:
         screen.blit(temporary_surface,(50+150*(i%6),50+250*(i//6)))
 
     pygame.display.update()
-    clock.tick(240)
+    clock.tick(60)
