@@ -6,6 +6,8 @@ pygame.init()
 pygame.font.init()
 screen = pygame.display.set_mode((950,550))
 pygame.display.set_caption('SET')
+logo=pygame.image.load('pygame/Pictures/Logo.png')
+pygame.display.set_icon(logo)
 clock=pygame.time.Clock()
 score=0
 GameOver=False
