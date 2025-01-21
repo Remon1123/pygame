@@ -1,12 +1,17 @@
 import pygame
 import random
+from pathlib import Path
 from sys import exit
+
+dir = Path(__file__).resolve().parent
+print(dir)
 
 pygame.init()
 pygame.font.init()
 screen = pygame.display.set_mode((950,550))
 pygame.display.set_caption('SET')
-logo=pygame.image.load('pygame/Pictures/Logo.png')
+logopath = dir / "Pictures/Logo.png"
+logo=pygame.image.load(logopath)
 pygame.display.set_icon(logo)
 clock=pygame.time.Clock()
 score=0
@@ -37,7 +42,8 @@ def InitializeCards():
         for j in range (3):
             for k in range(3):
                 for l in range(3):
-                    Cards.append([i,j,k,l,"pygame"+"\\"+"kaarten"+"\\"+color[l]+shape[k]+fill[j]+amount[i]+".gif"])
+                    tempfilename="kaarten"+"\\"+color[l]+shape[k]+fill[j]+amount[i]+".gif"
+                    Cards.append([i,j,k,l,dir / tempfilename])
 InitializeCards()
 
 #getcard() retrieves a random card that hasnt been used yet
