@@ -1,3 +1,6 @@
+from pathlib import Path
+dir = Path(__file__).resolve().parent
+
 class Card:
     def __init__(self,amount,fill,shape,color,filename):
         self.amount=amount
@@ -6,8 +9,8 @@ class Card:
         self.color=color
         filename=filenamecreator(amount,fill,shape,color)
         self.filename=filename
-    def __str__(self):
-        tempstring="["+str(self.amount)+ ", "+ str(self.fill)+", "+str(self.shape)+", "+str(self.color)+", "+self.filename+"]"
+    def __str__(self): #making sure a card can be printed, usefull for debugging. 
+        tempstring="["+str(self.amount)+ ", "+ str(self.fill)+", "+str(self.shape)+", "+str(self.color)+", "+str(self.filename)+"]"
         return tempstring
 
 #Card storage method
@@ -23,7 +26,7 @@ color_dic = {0:"green",1:"purple",2:"red"}
 
 def filenamecreator(a,f,s,c):
     fileName = "kaarten"+"\\"+color_dic[c]+shape_dic[s]+fill_dic[f]+amount_dic[a]+".gif"
-    return fileName
+    return dir / fileName
         
 
 #initializing all the RemainingCards
