@@ -24,7 +24,7 @@ highscore = 0
 #setting the standard font
 Font=pygame.font.SysFont('Arial',16)
 
-#initializing all the RemainingCards
+#initializing all the RemainingCards (Function from cardsfile.py)
 InitializeRemainingCards()
 
 #getcard() retrieves a random card that hasnt been used yet
