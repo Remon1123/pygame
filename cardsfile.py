@@ -37,4 +37,3 @@ def InitializeRemainingCards():
             for k in range(3):
                 for l in range(3):
                     RemainingCards.append(Card(i,j,k,l,""))
-InitializeRemainingCards()
