@@ -1,5 +1,6 @@
 import pygame
 import random
+from cardsfile import *
 from pathlib import Path
 from sys import exit
 
@@ -23,37 +24,17 @@ highscore = 0
 #setting the standard font
 Font=pygame.font.SysFont('Arial',16)
 
-#Card storage method = [Amount,Fill,Shape,Color,filename]
-#Amount, 1=0, 2=1, 3=2 
-#Fill, empty=0, full=1, shaded=2
-#Shape, diamond=0, oval=1, squiggle=2
-#Color, green=0, purple=1, red=2
-
-#Creating all the cards
-amount = {0:"1",1:"2",2:"3"}
-fill={0:"empty",1:"filled",2:"shaded"}
-shape={0:"diamond",1:"oval",2:"squiggle"}
-color = {0:"green",1:"purple",2:"red"}
-
-#initializing all the cards
-Cards=[]
-def InitializeCards():
-    for i in range(3):
-        for j in range (3):
-            for k in range(3):
-                for l in range(3):
-                    tempfilename="kaarten"+"\\"+color[l]+shape[k]+fill[j]+amount[i]+".gif"
-                    Cards.append([i,j,k,l,dir / tempfilename])
-InitializeCards()
+#initializing all the RemainingCards
+InitializeRemainingCards()
 
 #getcard() retrieves a random card that hasnt been used yet
 def getcard():
-    if len(Cards)>1:
-        randomnumber=random.randint(0,len(Cards)-1)
-    elif len(Cards)==1:
+    if len(RemainingCards)>1:
+        randomnumber=random.randint(0,len(RemainingCards)-1)
+    elif len(RemainingCards)==1:
         randomnumber=0
-    temp=Cards[randomnumber]
-    Cards.pop(randomnumber)
+    temp=RemainingCards[randomnumber]
+    RemainingCards.pop(randomnumber)
     return temp
 
 #initializing the table
@@ -63,13 +44,23 @@ def InitializeTable():
         Table_Cards.append(getcard())
 InitializeTable()
 
-def Set_Check(Kaart1,Kaart2,Kaart3): #function that checks for 3 given indices of cards in the table cards list if they are a set
-    for i in range(4):
+def Set_Check(Kaart1,Kaart2,Kaart3): #function that checks for 3 given indices of Table_Cards if they are a set
+    propertiescheck = { #To make the card checking easier
+    0:Table_Cards[Kaart1].amount==Table_Cards[Kaart2].amount and Table_Cards[Kaart1].amount==Table_Cards[Kaart3].amount and Table_Cards[Kaart2].amount==Table_Cards[Kaart3].amount, 
+    1:Table_Cards[Kaart1].amount!=Table_Cards[Kaart2].amount and Table_Cards[Kaart1].amount!=Table_Cards[Kaart3].amount and Table_Cards[Kaart2].amount!=Table_Cards[Kaart3].amount,
+    2:Table_Cards[Kaart1].fill==Table_Cards[Kaart2].fill and Table_Cards[Kaart1].fill==Table_Cards[Kaart3].fill and Table_Cards[Kaart2].fill==Table_Cards[Kaart3].fill,
+    3:Table_Cards[Kaart1].fill!=Table_Cards[Kaart2].fill and Table_Cards[Kaart1].fill!=Table_Cards[Kaart3].fill and Table_Cards[Kaart2].fill!=Table_Cards[Kaart3].fill,
+    4:Table_Cards[Kaart1].shape==Table_Cards[Kaart2].shape and Table_Cards[Kaart1].shape==Table_Cards[Kaart3].shape and Table_Cards[Kaart2].shape==Table_Cards[Kaart3].shape,
+    5:Table_Cards[Kaart1].shape!=Table_Cards[Kaart2].shape and Table_Cards[Kaart1].shape!=Table_Cards[Kaart3].shape and Table_Cards[Kaart2].shape!=Table_Cards[Kaart3].shape,
+    6:Table_Cards[Kaart1].color==Table_Cards[Kaart2].color and Table_Cards[Kaart1].color==Table_Cards[Kaart3].color and Table_Cards[Kaart2].color==Table_Cards[Kaart3].color,
+    7:Table_Cards[Kaart1].color!=Table_Cards[Kaart2].color and Table_Cards[Kaart1].color!=Table_Cards[Kaart3].color and Table_Cards[Kaart2].color!=Table_Cards[Kaart3].color
+    }
+    for i in range(0,8,2):
         #testing for each of the for properties if they are all the same or all different
     	#if that is not the case it returns False other and otherwise returns True
-        if Table_Cards[Kaart1][i]==Table_Cards[Kaart2][i] and Table_Cards[Kaart1][i]==Table_Cards[Kaart3][i] and Table_Cards[Kaart2][i]==Table_Cards[Kaart3][i]:
+        if propertiescheck[i]:
             i=i
-        elif Table_Cards[Kaart1][i]!=Table_Cards[Kaart2][i] and Table_Cards[Kaart1][i]!=Table_Cards[Kaart3][i] and Table_Cards[Kaart2][i]!=Table_Cards[Kaart3][i]:
+        elif propertiescheck[i+1]:
             i=i
         else:
             return False
@@ -89,13 +80,13 @@ def Get_Sets():
                     All_Sets.append([Kaart1,Kaart2,Kaart3])
 Get_Sets()
 
-#List that has all the selected cards
+#List that has all the selected RemainingCards
 SET_SelectorList=[]
 
 #this functions handles the set selection of the player
 def Set_Try(s,a,b,c):
     if Set_Check(a,b,c):
-        if len(Cards)>0:
+        if len(RemainingCards)>0:
             Table_Cards[a]=getcard()
             Table_Cards[b]=getcard()
             Table_Cards[c]=getcard()
@@ -148,7 +139,7 @@ while True:
 
     
     if len(All_Sets)==0:
-        if len(Cards)>0:
+        if len(RemainingCards)>0:
             if NoSetsTextTime==0:
                 NoSetsTextTime=60
         else:
@@ -173,13 +164,13 @@ while True:
         if inputkeys[pygame.K_SPACE]:
             GameOver=False
             Table_Cards=[]
-            InitializeCards()
+            InitializeRemainingCards()
             InitializeTable()
             score=0
 
-    #adding the cards to the screen
+    #adding the Table_Cards to the screen
     for i in range(len(Table_Cards)):
-        temporary_surface = pygame.image.load(Table_Cards[i][-1])
+        temporary_surface = pygame.image.load(Table_Cards[i].filename)
         cardcharacter = Font.render(chr(97+i),False,(0,0,0))
         temporary_surface.blit(cardcharacter,(80,180))
         gameboard.blit(temporary_surface,(50+150*(i%6),50+250*(i//6)))
