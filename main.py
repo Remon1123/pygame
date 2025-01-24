@@ -1,3 +1,4 @@
+# Here we import the required modules
 import pygame
 import random
 from cardsfile import *
@@ -15,19 +16,21 @@ logopath = dir / "Pictures/Logo.png"
 logo=pygame.image.load(logopath)
 pygame.display.set_icon(logo)
 clock=pygame.time.Clock()
+
+# Giving some variables beginvalues
 score=0
 GameOver=False
 inputdelay=0
 NoSetsTextTime=0
 highscore = 0
 
-#setting the standard font
+# Setting the standard font
 Font=pygame.font.SysFont('Arial',16)
 
-#initializing all the RemainingCards
+# Initializing all the RemainingCards
 InitializeRemainingCards()
 
-#getcard() retrieves a random card that hasnt been used yet
+# This function retrieves a random card that hasnt been used yet
 def getcard():
     if len(RemainingCards)>1:
         randomnumber=random.randint(0,len(RemainingCards)-1)
@@ -37,15 +40,17 @@ def getcard():
     RemainingCards.pop(randomnumber)
     return temp
 
-#initializing the table
+# This function initializes the table of twelve cards
 Table_Cards=[]
 def InitializeTable():
     for i in range(12):
         Table_Cards.append(getcard())
 InitializeTable()
 
-def Set_Check(Kaart1,Kaart2,Kaart3): #function that checks for 3 given indices of Table_Cards if they are a set
-    propertiescheck = { #To make the card checking easier
+# This function checks for three selectes cards whether they form a set
+# It includes a dictionary that makes the card checking easier
+def Set_Check(Kaart1,Kaart2,Kaart3): 
+    propertiescheck = { 
     0:Table_Cards[Kaart1].amount==Table_Cards[Kaart2].amount and Table_Cards[Kaart1].amount==Table_Cards[Kaart3].amount and Table_Cards[Kaart2].amount==Table_Cards[Kaart3].amount, 
     1:Table_Cards[Kaart1].amount!=Table_Cards[Kaart2].amount and Table_Cards[Kaart1].amount!=Table_Cards[Kaart3].amount and Table_Cards[Kaart2].amount!=Table_Cards[Kaart3].amount,
     2:Table_Cards[Kaart1].fill==Table_Cards[Kaart2].fill and Table_Cards[Kaart1].fill==Table_Cards[Kaart3].fill and Table_Cards[Kaart2].fill==Table_Cards[Kaart3].fill,
@@ -55,22 +60,20 @@ def Set_Check(Kaart1,Kaart2,Kaart3): #function that checks for 3 given indices o
     6:Table_Cards[Kaart1].color==Table_Cards[Kaart2].color and Table_Cards[Kaart1].color==Table_Cards[Kaart3].color and Table_Cards[Kaart2].color==Table_Cards[Kaart3].color,
     7:Table_Cards[Kaart1].color!=Table_Cards[Kaart2].color and Table_Cards[Kaart1].color!=Table_Cards[Kaart3].color and Table_Cards[Kaart2].color!=Table_Cards[Kaart3].color
     }
+
+    # This loop checks whether all four properties are the same or all different.
+    # If this condition is satisfied the boolian True is returned and otherwise the boolian False is returned.
     for i in range(0,8,2):
-        #testing for each of the for properties if they are all the same or all different
-    	#if that is not the case it returns False other and otherwise returns True
         if propertiescheck[i]:
             i=i
         elif propertiescheck[i+1]:
             i=i
         else:
             return False
-    print (chr(Kaart1+97) +" "+ str(Table_Cards[Kaart1]))
-    print (chr(Kaart2+97) +" "+  str(Table_Cards[Kaart2]))
-    print (chr(Kaart3+97) +" "+ str(Table_Cards[Kaart3]))
-    print(True)
     return True
 
-#Getting all the sets
+# This function makes a list of all the current sets
+# from the twelve cards on the table
 All_Sets=[]
 def Get_Sets():
     for Kaart1 in range (len(Table_Cards)-2):
@@ -83,7 +86,10 @@ Get_Sets()
 #List that has all the selected RemainingCards
 SET_SelectorList=[]
 
-#this functions handles the set selection of the player
+# Checking whether the selected cards are a set
+# If so and there are still cards left, the table gets refilled
+# Otherwise the cards from the set are just popped
+# the score score gets returned as wel
 def Set_Try(s,a,b,c):
     if Set_Check(a,b,c):
         if len(RemainingCards)>0:
@@ -100,10 +106,11 @@ def Set_Try(s,a,b,c):
     else:
         return s
 
-#keys dictionary which making checking all the inputs of the characters a to l way easier
+# A keys dictionary which makes checking all the inputs of the characters a to l easier
 keysdictionary={0:pygame.K_a,1:pygame.K_b,2:pygame.K_c,3:pygame.K_d,4:pygame.K_e,5:pygame.K_f,6:pygame.K_g,7:pygame.K_h,8:pygame.K_i,9:pygame.K_j,10:pygame.K_k,11:pygame.K_l}     
 
-#Main game loop
+# This is the main game loop where the game is displayed
+# and all necesary functions are called
 while True:
     gameboard = pygame.Surface((950,550))
     gameboard.fill(pygame.Color(152, 155, 156))
@@ -117,7 +124,7 @@ while True:
     
     inputkeys=pygame.key.get_pressed()
 
-    #checking if a to l are pressed
+    #checking if the keys from a to l are pressed
     if inputdelay==0:
         if len(SET_SelectorList)<3:
             for i in range(12):
@@ -128,16 +135,22 @@ while True:
                         break
     else:
         inputdelay-=1
-        
-    if inputkeys[pygame.K_RETURN]: #when enter is pressed checking the set
-        if len(SET_SelectorList)==3: #when 3 cards are selected checking if they are a set.
+    
+    # this makes sure that the set is checked when enter is pressd
+    # and that a set is being checked only when three cards are selected
+    # the score is updated and the list of selected cars is emptied
+    if inputkeys[pygame.K_RETURN]: 
+        if len(SET_SelectorList)==3: 
             score=Set_Try(score,SET_SelectorList[0],SET_SelectorList[1],SET_SelectorList[2])
             SET_SelectorList=[]
 
+    # The selected card is undone by clicking backspace
     if inputkeys[pygame.K_BACKSPACE]:
         SET_SelectorList=[]
 
-    
+    # If there are no sets but there are still cards left
+    # a counter is set to 60
+    # Otherwise its gameover
     if len(All_Sets)==0:
         if len(RemainingCards)>0:
             if NoSetsTextTime==0:
@@ -145,6 +158,9 @@ while True:
         else:
             GameOver=True
     
+    # when there are no sets this is displayed
+    # the counter dicreases to zero and then the top layer is refilled with new cards
+    # Now the table is checked again on sets
     if NoSetsTextTime>0:
         NoSets = Font.render("No Sets Available!",False,(0,0,0))
         gameboard.blit(NoSets,(475-NoSets.get_width()//2,25-NoSets.get_height()//2))
@@ -152,12 +168,10 @@ while True:
         if NoSetsTextTime==0:
             for i in range (0,12,4):
                 a=random.randint(0+i,3+i)
-                print(a)
-                print(Table_Cards[a])
                 Table_Cards[a]=getcard()
-                print(Table_Cards[a])
             Get_Sets()
 
+    # if gameover this is displayed and space enables player to restart
     if GameOver:
         GameOverText = Font.render("Game Over! Press the Spacebar to play again.",False,(0,0,0))
         gameboard.blit(GameOverText,(475-GameOverText.get_width()//2,25-GameOverText.get_height()//2))
@@ -168,16 +182,16 @@ while True:
             InitializeTable()
             score=0
 
-    #adding the Table_Cards to the screen
+    # Adding the Table_Cards to the screen
     for i in range(len(Table_Cards)):
         temporary_surface = pygame.image.load(Table_Cards[i].filename)
         cardcharacter = Font.render(chr(97+i),False,(0,0,0))
         temporary_surface.blit(cardcharacter,(80,180))
         gameboard.blit(temporary_surface,(50+150*(i%6),50+250*(i//6)))
 
-    #adding the gameboard to the screen
+    # Adding the gameboard to the screen
+    # Score and highscore are displayed and the highscore is updated
     screen.blit(gameboard,(0,0))
-
     scoretext=Font.render("score="+str(score),False,(0,0,0))
     screen.blit(scoretext,(20,20))
     if score>highscore:
