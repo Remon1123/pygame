@@ -65,7 +65,7 @@ def Set_Check(Kaart1,Kaart2,Kaart3):
     }
 
     # This loop checks whether all four properties are the same or all different.
-    # If this condition is satisfied the boolian True is returned and otherwise the boolian False is returned.
+    # If this condition is satisfied the boolean True is returned and otherwise the boolean False is returned.
     for i in range(0,8,2):
         if propertiescheck[i]:
             i=i
