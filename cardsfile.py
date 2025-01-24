@@ -10,7 +10,7 @@ class Card:
         filename=filenamecreator(amount,fill,shape,color)
         self.filename=filename
     def __str__(self): #making sure a card can be printed, usefull for debugging. 
-        tempstring="["+str(self.amount)+ ", "+ str(self.fill)+", "+str(self.shape)+", "+str(self.color)+", "+str(self.filename)+"]"
+        tempstring="[amount="+str(self.amount)+ ", fill="+ str(self.fill)+", shape="+str(self.shape)+", color="+str(self.color)+", "+str(self.filename)+"]"
         return tempstring
 
 #Card storage method
