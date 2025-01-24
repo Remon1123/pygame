@@ -17,6 +17,9 @@ logo=pygame.image.load(logopath)
 pygame.display.set_icon(logo)
 clock=pygame.time.Clock()
 
+#DEBUG-MODE, if True prints some usefull statements in the command line
+DEBUG=True 
+
 # Giving some variables beginvalues
 score=0
 GameOver=False
@@ -70,6 +73,11 @@ def Set_Check(Kaart1,Kaart2,Kaart3):
             i=i
         else:
             return False
+    if DEBUG:
+        print (chr(Kaart1+97) +" "+ str(Table_Cards[Kaart1]))
+        print (chr(Kaart2+97) +" "+  str(Table_Cards[Kaart2]))
+        print (chr(Kaart3+97) +" "+ str(Table_Cards[Kaart3]))
+        print(True)
     return True
 
 # This function makes a list of all the current sets
@@ -168,7 +176,12 @@ while True:
         if NoSetsTextTime==0:
             for i in range (0,12,4):
                 a=random.randint(0+i,3+i)
+                if DEBUG:
+                    print(a)
+                    print(Table_Cards[a])
                 Table_Cards[a]=getcard()
+                if DEBUG:
+                    print(Table_Cards[a])
             Get_Sets()
 
     # if gameover this is displayed and space enables player to restart
