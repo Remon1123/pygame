@@ -26,6 +26,9 @@ GameOver=False
 inputdelay=0
 NoSetsTextTime=0
 highscore = 0
+timesinceset = 0
+displaytime = 0
+computerscore = 0
 
 # Setting the standard font
 Font=pygame.font.SysFont('Arial',16)
@@ -100,6 +103,8 @@ SET_SelectorList=[]
 # the score score gets returned as wel
 def Set_Try(s,a,b,c):
     if Set_Check(a,b,c):
+        global timesinceset
+        timesinceset = 0
         if len(RemainingCards)>0:
             Table_Cards[a]=getcard()
             Table_Cards[b]=getcard()
@@ -169,6 +174,7 @@ while True:
     # when there are no sets this is displayed
     # the counter dicreases to zero and then the top layer is refilled with new cards
     # Now the table is checked again on sets
+
     if NoSetsTextTime>0:
         NoSets = Font.render("No Sets Available!",False,(0,0,0))
         gameboard.blit(NoSets,(475-NoSets.get_width()//2,25-NoSets.get_height()//2))
@@ -183,6 +189,22 @@ while True:
                 if DEBUG:
                     print(Table_Cards[a])
             Get_Sets()
+    
+    #if you take longer then a certain amount of time you lose too the computer, in this case 30 seconds
+    #Furthemore then 3 cards are removed which formed a set and 3 new cards are added
+
+    timesinceset += 1
+    if timesinceset > 900:
+        timesinceset = 0
+        displaytime = 60
+        randomset = random.choice(All_Sets)
+        computerscore = Set_Try(computerscore,randomset[0],randomset[1],randomset[2])
+    
+    #displays the "You took too long" for a second
+    if displaytime > 0:
+        displaytime -= 1
+        Computerwon = Font.render("You took too long",False,(0,0,0))
+        gameboard.blit(Computerwon,(475-Computerwon.get_width()//2,25-Computerwon.get_height()//2))
 
     # if gameover this is displayed and space enables player to restart
     if GameOver:
@@ -211,13 +233,15 @@ while True:
         highscore=score
     highscoretext=Font.render("highscore="+str(highscore),False,(0,0,0))
     screen.blit(highscoretext,(930-highscoretext.get_width(),20))
-
+    computerscoretext = Font.render("computerscore="+str(computerscore),False,(0,0,0))
+    screen.blit(computerscoretext,(20,8))
     
     for i in SET_SelectorList:
         temporary_surface = pygame.Surface((100,200))
         temporary_surface.fill(pygame.Color(255,255,0))
         temporary_surface.set_alpha(64)
         screen.blit(temporary_surface,(50+150*(i%6),50+250*(i//6)))
+    
 
     pygame.display.update()
     clock.tick(60)
