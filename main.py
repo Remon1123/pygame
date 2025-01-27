@@ -216,6 +216,7 @@ while True:
             InitializeRemainingCards()
             InitializeTable()
             score=0
+            computerscore=0
 
     # Adding the Table_Cards to the screen
     for i in range(len(Table_Cards)):
