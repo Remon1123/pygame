@@ -70,7 +70,7 @@ def Set_Check(Card1,Card2,Card3):
 # This function makes a list of all the current sets
 # from the twelve cards on the table
 All_Sets=[]
-def Get_Sets():
+def Get_All_Sets():
     for Card1 in range (len(Table_Cards)-2):
         for Card2 in range(Card1+1,len(Table_Cards)-1):
             for Card3 in range(Card2+1,len(Table_Cards)):
@@ -82,7 +82,7 @@ Table_Cards=[]
 def InitializeTable():
     for i in range(12):
         Table_Cards.append(getcard())
-    Get_Sets()
+    Get_All_Sets()
 InitializeTable()
 
 #List that has all the selected RemainingCards
@@ -105,7 +105,7 @@ def Set_Try(s,a,b,c):
             Table_Cards.pop(b-1)
             Table_Cards.pop(c-2)
         All_Sets.clear()
-        Get_Sets()
+        Get_All_Sets()
         return s+1
     else:
         return s
@@ -179,7 +179,7 @@ while True:
                 Table_Cards[a]=getcard()
                 if DEBUG:
                     print(Table_Cards[a])
-            Get_Sets()
+            Get_All_Sets()
     
     #if you take longer then a certain amount of time you lose too the computer, in this case 30 seconds
     #Furthemore then 3 cards are removed which formed a set and 3 new cards are added
