@@ -46,13 +46,6 @@ def getcard():
     RemainingCards.pop(randomnumber)
     return temp
 
-# This function initializes the table of twelve cards
-Table_Cards=[]
-def InitializeTable():
-    for i in range(12):
-        Table_Cards.append(getcard())
-InitializeTable()
-
 # This function checks for three selectes cards whether they form a set
 # It includes a dictionary that makes the card checking easier
 def Set_Check(Card1,Card2,Card3): 
@@ -83,7 +76,14 @@ def Get_Sets():
             for Card3 in range(Card2+1,len(Table_Cards)):
                 if Set_Check(Card1,Card2,Card3):
                     All_Sets.append([Card1,Card2,Card3])
-Get_Sets()
+
+# This function initializes the table of twelve cards
+Table_Cards=[]
+def InitializeTable():
+    for i in range(12):
+        Table_Cards.append(getcard())
+    Get_Sets()
+InitializeTable()
 
 #List that has all the selected RemainingCards
 SET_SelectorList=[]
