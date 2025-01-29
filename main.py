@@ -1,3 +1,6 @@
+#DEBUG-MODE, if True prints some usefull statements in the command line
+DEBUG=True 
+
 # Here we import the required modules
 import pygame
 import random
@@ -6,7 +9,8 @@ from pathlib import Path
 from sys import exit
 
 dir = Path(__file__).resolve().parent
-print(dir)
+if DEBUG:
+    print(dir)
 
 pygame.init()
 pygame.font.init()
@@ -16,9 +20,6 @@ logopath = dir / "Pictures/Logo.png"
 logo=pygame.image.load(logopath)
 pygame.display.set_icon(logo)
 clock=pygame.time.Clock()
-
-#DEBUG-MODE, if True prints some usefull statements in the command line
-DEBUG=True 
 
 # Giving some variables beginvalues
 score=0
