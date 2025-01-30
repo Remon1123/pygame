@@ -251,7 +251,7 @@ while True:
     hinttext = Font.render("Press spacebar for a hint",False,(0,0,0))
 
     # Displays that you can press spacebar for a hint,
-    # if and only if the game is not over and you've not selected anything
+    # if and only if the game is not over and you've not selected anything 
 
     if GameOver == False and len(SET_SelectorList) == 0:
         screen.blit(hinttext,(20,520))
