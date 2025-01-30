@@ -1,6 +1,3 @@
-#DEBUG-MODE, if True prints some usefull statements in the command line
-DEBUG=True 
-
 # Here we import the required modules
 import pygame
 import random
@@ -9,8 +6,7 @@ from pathlib import Path
 from sys import exit
 
 dir = Path(__file__).resolve().parent
-if DEBUG:
-    print(dir)
+print(dir)
 
 pygame.init()
 pygame.font.init()
@@ -20,6 +16,9 @@ logopath = dir / "Pictures/Logo.png"
 logo=pygame.image.load(logopath)
 pygame.display.set_icon(logo)
 clock=pygame.time.Clock()
+
+#DEBUG-MODE, if True prints some usefull statements in the command line
+DEBUG=True 
 
 # Giving some variables beginvalues
 score=0
@@ -46,10 +45,26 @@ def getcard():
     RemainingCards.pop(randomnumber)
     return temp
 
+# This function initializes the table of twelve cards
+Table_Cards=[]
+def InitializeTable():
+    for i in range(12):
+        Table_Cards.append(getcard())
+InitializeTable()
+
 # This function checks for three selectes cards whether they form a set
 # It includes a dictionary that makes the card checking easier
-def Set_Check(Card1,Card2,Card3): 
-    propertiescheck = {0:Table_Cards[Card1].amount==Table_Cards[Card2].amount and Table_Cards[Card1].amount==Table_Cards[Card3].amount and Table_Cards[Card2].amount==Table_Cards[Card3].amount, 1:Table_Cards[Card1].amount!=Table_Cards[Card2].amount and Table_Cards[Card1].amount!=Table_Cards[Card3].amount and Table_Cards[Card2].amount!=Table_Cards[Card3].amount,2:Table_Cards[Card1].fill==Table_Cards[Card2].fill and Table_Cards[Card1].fill==Table_Cards[Card3].fill and Table_Cards[Card2].fill==Table_Cards[Card3].fill,3:Table_Cards[Card1].fill!=Table_Cards[Card2].fill and Table_Cards[Card1].fill!=Table_Cards[Card3].fill and Table_Cards[Card2].fill!=Table_Cards[Card3].fill,4:Table_Cards[Card1].shape==Table_Cards[Card2].shape and Table_Cards[Card1].shape==Table_Cards[Card3].shape and Table_Cards[Card2].shape==Table_Cards[Card3].shape,5:Table_Cards[Card1].shape!=Table_Cards[Card2].shape and Table_Cards[Card1].shape!=Table_Cards[Card3].shape and Table_Cards[Card2].shape!=Table_Cards[Card3].shape,6:Table_Cards[Card1].color==Table_Cards[Card2].color and Table_Cards[Card1].color==Table_Cards[Card3].color and Table_Cards[Card2].color==Table_Cards[Card3].color,7:Table_Cards[Card1].color!=Table_Cards[Card2].color and Table_Cards[Card1].color!=Table_Cards[Card3].color and Table_Cards[Card2].color!=Table_Cards[Card3].color}
+def Set_Check(Kaart1,Kaart2,Kaart3): 
+    propertiescheck = { 
+    0:Table_Cards[Kaart1].amount==Table_Cards[Kaart2].amount and Table_Cards[Kaart1].amount==Table_Cards[Kaart3].amount and Table_Cards[Kaart2].amount==Table_Cards[Kaart3].amount, 
+    1:Table_Cards[Kaart1].amount!=Table_Cards[Kaart2].amount and Table_Cards[Kaart1].amount!=Table_Cards[Kaart3].amount and Table_Cards[Kaart2].amount!=Table_Cards[Kaart3].amount,
+    2:Table_Cards[Kaart1].fill==Table_Cards[Kaart2].fill and Table_Cards[Kaart1].fill==Table_Cards[Kaart3].fill and Table_Cards[Kaart2].fill==Table_Cards[Kaart3].fill,
+    3:Table_Cards[Kaart1].fill!=Table_Cards[Kaart2].fill and Table_Cards[Kaart1].fill!=Table_Cards[Kaart3].fill and Table_Cards[Kaart2].fill!=Table_Cards[Kaart3].fill,
+    4:Table_Cards[Kaart1].shape==Table_Cards[Kaart2].shape and Table_Cards[Kaart1].shape==Table_Cards[Kaart3].shape and Table_Cards[Kaart2].shape==Table_Cards[Kaart3].shape,
+    5:Table_Cards[Kaart1].shape!=Table_Cards[Kaart2].shape and Table_Cards[Kaart1].shape!=Table_Cards[Kaart3].shape and Table_Cards[Kaart2].shape!=Table_Cards[Kaart3].shape,
+    6:Table_Cards[Kaart1].color==Table_Cards[Kaart2].color and Table_Cards[Kaart1].color==Table_Cards[Kaart3].color and Table_Cards[Kaart2].color==Table_Cards[Kaart3].color,
+    7:Table_Cards[Kaart1].color!=Table_Cards[Kaart2].color and Table_Cards[Kaart1].color!=Table_Cards[Kaart3].color and Table_Cards[Kaart2].color!=Table_Cards[Kaart3].color
+    }
 
     # This loop checks whether all four properties are the same or all different.
     # If this condition is satisfied the boolean True is returned and otherwise the boolean False is returned.
@@ -61,29 +76,22 @@ def Set_Check(Card1,Card2,Card3):
         else:
             return False
     if DEBUG:
-        print (chr(Card1+97) +" "+ str(Table_Cards[Card1]))
-        print (chr(Card2+97) +" "+  str(Table_Cards[Card2]))
-        print (chr(Card3+97) +" "+ str(Table_Cards[Card3]))
+        print (chr(Kaart1+97) +" "+ str(Table_Cards[Kaart1]))
+        print (chr(Kaart2+97) +" "+  str(Table_Cards[Kaart2]))
+        print (chr(Kaart3+97) +" "+ str(Table_Cards[Kaart3]))
         print(True)
     return True
 
 # This function makes a list of all the current sets
 # from the twelve cards on the table
 All_Sets=[]
-def Get_All_Sets():
-    for Card1 in range (len(Table_Cards)-2):
-        for Card2 in range(Card1+1,len(Table_Cards)-1):
-            for Card3 in range(Card2+1,len(Table_Cards)):
-                if Set_Check(Card1,Card2,Card3):
-                    All_Sets.append([Card1,Card2,Card3])
-
-# This function initializes the table of twelve cards
-Table_Cards=[]
-def InitializeTable():
-    for i in range(12):
-        Table_Cards.append(getcard())
-    Get_All_Sets()
-InitializeTable()
+def Get_Sets():
+    for Kaart1 in range (len(Table_Cards)-2):
+        for Kaart2 in range(Kaart1+1,len(Table_Cards)-1):
+            for Kaart3 in range(Kaart2+1,len(Table_Cards)):
+                if Set_Check(Kaart1,Kaart2,Kaart3):
+                    All_Sets.append([Kaart1,Kaart2,Kaart3])
+Get_Sets()
 
 #List that has all the selected RemainingCards
 SET_SelectorList=[]
@@ -105,7 +113,7 @@ def Set_Try(s,a,b,c):
             Table_Cards.pop(b-1)
             Table_Cards.pop(c-2)
         All_Sets.clear()
-        Get_All_Sets()
+        Get_Sets()
         return s+1
     else:
         return s
@@ -192,7 +200,7 @@ while True:
                 Table_Cards[a]=getcard()
                 if DEBUG:
                     print(Table_Cards[a])
-            Get_All_Sets()
+            Get_Sets()
     
     #if you take longer then a certain amount of time you lose too the computer, in this case 30 seconds
     #Furthemore then 3 cards are removed which formed a set and 3 new cards are added
@@ -228,7 +236,6 @@ while True:
             InitializeRemainingCards()
             InitializeTable()
             score=0
-            computerscore=0
 
     # Adding the Table_Cards to the screen
     for i in range(len(Table_Cards)):
