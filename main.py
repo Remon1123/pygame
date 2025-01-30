@@ -29,7 +29,6 @@ highscore = 0
 timesinceset = 0
 displaytime = 0
 computerscore = 0
-
 # Setting the standard font
 Font=pygame.font.SysFont('Arial',16)
 
@@ -119,15 +118,23 @@ def Set_Try(s,a,b,c):
     else:
         return s
 
+# This def gets as input the set_selectorlist,
+# as output it gives a random card that is part of a set
+
+def hint():
+    a = random.choice(All_Sets)
+    b = random.choice(a)
+    return ([b])
+
 # A keys dictionary which makes checking all the inputs of the characters a to l easier
 keysdictionary={0:pygame.K_a,1:pygame.K_b,2:pygame.K_c,3:pygame.K_d,4:pygame.K_e,5:pygame.K_f,6:pygame.K_g,7:pygame.K_h,8:pygame.K_i,9:pygame.K_j,10:pygame.K_k,11:pygame.K_l}     
+
 
 # This is the main game loop where the game is displayed
 # and all necesary functions are called
 while True:
     gameboard = pygame.Surface((950,550))
     gameboard.fill(pygame.Color(152, 155, 156))
-
 
     #Checking if the program is closed or not
     for event in pygame.event.get():
@@ -152,9 +159,14 @@ while True:
     # this makes sure that the set is checked when enter is pressd
     # and that a set is being checked only when three cards are selected
     # the score is updated and the list of selected cars is emptied
+    # if you try an invalid set, the computer gains a score and a set is removed
     if inputkeys[pygame.K_RETURN]: 
         if len(SET_SelectorList)==3: 
+            temp = score
             score=Set_Try(score,SET_SelectorList[0],SET_SelectorList[1],SET_SelectorList[2])
+            if score == temp:
+                randomset = random.choice(All_Sets)
+                computerscore = Set_Try(computerscore,randomset[0],randomset[1],randomset[2])
             SET_SelectorList=[]
 
     # The selected card is undone by clicking backspace
@@ -194,20 +206,28 @@ while True:
     #Furthemore then 3 cards are removed which formed a set and 3 new cards are added
 
     timesinceset += 1
-    if timesinceset > 900:
-        timesinceset = 0
+    if timesinceset > 1800:
         displaytime = 60
         randomset = random.choice(All_Sets)
+        SET_SelectorList = []
         computerscore = Set_Try(computerscore,randomset[0],randomset[1],randomset[2])
     
     #displays the "You took too long" for a second
+
     if displaytime > 0:
         displaytime -= 1
         Computerwon = Font.render("You took too long",False,(0,0,0))
         gameboard.blit(Computerwon,(475-Computerwon.get_width()//2,25-Computerwon.get_height()//2))
+    
+    # If you're struggling to find a set you can press spacebar to get a hint,
+    # then the game will give you a card that is part of a set
+
+    if GameOver == False and len(SET_SelectorList) == 0:
+        if inputkeys[pygame.K_SPACE]:
+            SET_SelectorList = hint()
 
     # if gameover this is displayed and space enables player to restart
-    if GameOver:
+    if GameOver == True:
         GameOverText = Font.render("Game Over! Press the Spacebar to play again.",False,(0,0,0))
         gameboard.blit(GameOverText,(475-GameOverText.get_width()//2,25-GameOverText.get_height()//2))
         if inputkeys[pygame.K_SPACE]:
@@ -225,7 +245,7 @@ while True:
         gameboard.blit(temporary_surface,(50+150*(i%6),50+250*(i//6)))
 
     # Adding the gameboard to the screen
-    # Score and highscore are displayed and the highscore is updated
+    # Score,highscore and computerscore  are displayed and the highscore is updated
     screen.blit(gameboard,(0,0))
     scoretext=Font.render("score="+str(score),False,(0,0,0))
     screen.blit(scoretext,(20,20))
@@ -235,6 +255,13 @@ while True:
     screen.blit(highscoretext,(930-highscoretext.get_width(),20))
     computerscoretext = Font.render("computerscore="+str(computerscore),False,(0,0,0))
     screen.blit(computerscoretext,(20,8))
+    hinttext = Font.render("Press spacebar for a hint",False,(0,0,0))
+
+    # Displays that you can press spacebar for a hint,
+    # if and only if the game is not over and you've not selected anything
+
+    if GameOver == False and len(SET_SelectorList) == 0:
+        screen.blit(hinttext,(20,520))
     
     for i in SET_SelectorList:
         temporary_surface = pygame.Surface((100,200))
