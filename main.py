@@ -1,5 +1,5 @@
 #DEBUG-MODE, if True prints some usefull statements in the command line
-DEBUG=True 
+DEBUG=False
 
 # Here we import the required modules
 import pygame
