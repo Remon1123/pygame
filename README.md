@@ -1,1 +1,8 @@
-# pygame
+Thank you for downloading our game. We hope you will enjoy it. :) - Lennard, Remon and Mees. 
+We want to thank the professor and teaching assistants from the "Programmeren in de Wiskunde" course at Utrecht University for helping us make our game. 
+
+Here is the Manual to play our game:
+Our game runs in the programming language python. This needs to be downloaded before being able to play the game. Furhermore to run python you also need the program visual studio code. The next step is to require the module called 'pygame'. To download this module, the player must type the following line in the commant promt of visual studio code: 'pip install pygame'. When the installaton is completed, one is ready to import the pygame module. This is done by typing the line 'import pygame' in the upper corner of the code.
+
+To run the code you only have to click on the play-figure in the right corner of the program. Now the game is being displayed. To select a set type in the letters on your keyboard that correspond with the letters of the cards you want to select. Press enter to execute your decision. If the player accidentally selected the wrong card, the choice can be undone by clicking backspace. You can request a hint by pressing the spacebar. In the upper left the score of the current game is shown. In the upper right the player can see his all time highscore. The game is ended by clicking on the cross on the upper right. If all cards have been played and there are no sets available, the display shows 'game-over'. By clicking on space the game is restarted. 
+If you are interested in running the game in debug mode change the boolean value called "DEBUG" in the main.py for False to True
