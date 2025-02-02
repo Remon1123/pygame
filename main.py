@@ -288,6 +288,8 @@ while True:
     computerscoretext = Font.render("computerscore="+str(computerscore),False,(0,0,0))
     screen.blit(computerscoretext,(20,8))
     hinttext = Font.render("Press spacebar for a hint",False,(0,0,0))
+    timer = Font.render(str((difficulty*60-timesinceset)//60),False,(0,0,0))
+    screen.blit(timer,(925,525))
 
     # Displays that you can press spacebar for a hint,
     # if and only if the game is not over and you've not selected anything 
@@ -300,6 +302,7 @@ while True:
         temporary_surface.fill(pygame.Color(255,255,0))
         temporary_surface.set_alpha(64)
         screen.blit(temporary_surface,(50+150*(i%6),50+250*(i//6)))
+    
     
 
     pygame.display.update()
