@@ -121,6 +121,45 @@ def hint():
 # A keys dictionary which makes checking all the inputs of the characters a to l easier
 keysdictionary={0:pygame.K_a,1:pygame.K_b,2:pygame.K_c,3:pygame.K_d,4:pygame.K_e,5:pygame.K_f,6:pygame.K_g,7:pygame.K_h,8:pygame.K_i,9:pygame.K_j,10:pygame.K_k,11:pygame.K_l}     
 
+# A dictionary with the pictures for easy medium and hard
+difficulties = {0:dir / 'Pictures/Easy.png',1:dir / 'Pictures/Medium.png',2:dir / 'Pictures/Hard.png'}
+
+# a def with a loop in which you select the difficulty you want, easy, medium or hard
+def difficultyselector(difficulties):
+    while True: 
+        gameboard = pygame.Surface((950,550))
+        gameboard.fill(pygame.Color(152, 155, 156))
+        inputkeys=pygame.key.get_pressed()
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                pygame.quit()
+                exit()
+        if inputkeys[pygame.K_a]:
+            difficulty = 40
+            inputdelay = 60
+            break
+        if inputkeys[pygame.K_b]:
+            difficulty = 25
+            inputdelay = 60
+            break
+        if inputkeys[pygame.K_c]:
+            difficulty = 15
+            inputdelay = 60
+            break
+        for i in range(3):
+            temporary_surface = pygame.image.load(difficulties[i])
+            temporary_surface = pygame.transform.scale(temporary_surface, (300,150))
+            cardcharacter = Font.render(chr(97+i),False,(0,0,0))
+            temporary_surface.blit(cardcharacter,(280,120))
+            gameboard.blit(temporary_surface,(25+300*(i%6),200))
+        Selector = Font.render("Please select a difficulty", False , (0,0,0))
+        gameboard.blit(Selector,(475-Selector.get_width()//2,25))
+        screen.blit(gameboard,(0,0))
+        pygame.display.update()
+        clock.tick(60)
+    return(difficulty)
+
+difficulty = difficultyselector(difficulties)
 
 # This is the main game loop where the game is displayed
 # and all necesary functions are called
@@ -133,10 +172,9 @@ while True:
         if event.type==pygame.QUIT:
             pygame.quit()
             exit()
-    
     inputkeys=pygame.key.get_pressed()
 
-    #checking if the keys from a to l are pressed
+    #checking if the keys from a to l are pressed with a delay of 10 frames
     if inputdelay==0:
         if len(SET_SelectorList)<3:
             for i in range(12):
@@ -194,11 +232,11 @@ while True:
                     print(Table_Cards[a])
             Get_All_Sets()
     
-    #if you take longer then a certain amount of time you lose too the computer, in this case 30 seconds
+    #if you take longer then a certain amount of time(determined by the difficulty) you lose too the computer
     #Furthemore then 3 cards are removed which formed a set and 3 new cards are added
 
     timesinceset += 1
-    if timesinceset > 1800:
+    if timesinceset > difficulty * 60:
         displaytime = 60
         randomset = random.choice(All_Sets)
         SET_SelectorList = []
@@ -224,6 +262,7 @@ while True:
         gameboard.blit(GameOverText,(475-GameOverText.get_width()//2,25-GameOverText.get_height()//2))
         if inputkeys[pygame.K_SPACE]:
             GameOver=False
+            difficulty = difficultyselector(difficulties)
             Table_Cards=[]
             InitializeRemainingCards()
             InitializeTable()
